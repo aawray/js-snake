@@ -449,6 +449,7 @@ var Player = function(settings) {
 
     this.score = 0;
     this.speed = 6;
+    this.action = null;
 };
 
 /**
@@ -511,8 +512,7 @@ Game.prototype.onKeyDown = function(e) {
         }
     } else if(action) {
         if(this.isStarted()) {
-            var direction = this.scene.snake.directions[this.player.getDirectionByAction(action)];
-            this.scene.snake.updateDirection(direction);
+            this.player.action = action;
         }
     } 
 }
@@ -580,6 +580,12 @@ Game.prototype.update = function() {
     this.scene.clear();
     this.scene.drawStatus({"state": this.state, "score": this.player.score});
 
+    if(this.player.action) {
+        var direction = this.scene.snake.directions[this.player.getDirectionByAction(this.player.action)];
+        this.scene.snake.updateDirection(direction);
+        this.player.action = null;
+    }
+    
     this.scene.snake.move(this.scene.updateStage.bind(this.scene));
 
     switch(this.scene.snake.state) {
